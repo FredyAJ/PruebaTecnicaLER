@@ -1,0 +1,394 @@
+<div class="container">
+    <mat-toolbar>Gestión de Usuarios LER</mat-toolbar>
+    <div class="table-container">
+        <button mat-button color="primary" [routerLink]="'/createPerson'"
+            style="background-color: #ff5722; color: white; border-radius: 5px; padding: 10px 20px; font-weight: bold; margin-bottom: 12px;margin-top: 12px;">
+            Agregar Usuario
+        </button>
+
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="document">
+
+                <th mat-header-cell *matHeaderCellDef>
+                    <div class="column-container">
+                        <!-- Contenido de la columna 1 -->
+                        <div>
+                            <mat-icon aria-hidden="false" style="color: red; cursor: pointer;"
+                                aria-label="Example home icon" fontIcon="delete"
+                                (click)="deleteColumn('document')"></mat-icon>
+                            <div (click)="setSortColumn('document')" style="cursor: pointer;">
+                                Cedula
+                                @if (
+                                this.paginated.columnSort.includes("document")
+                                ) {
+
+                                @if (this.paginated.columnSort.includes('-1')) {
+                                <mat-icon fontIcon="arrow_downward"></mat-icon>
+                                }@else {
+
+                                <mat-icon fontIcon="arrow_upward"></mat-icon>
+
+                                }
+
+                                }
+                            </div>
+
+
+                            <mat-icon aria-hidden="false" style="color: blue; cursor: pointer;"
+                                [matMenuTriggerFor]="filterDocumentMenu" aria-label="Example home icon"
+                                fontIcon="filter_list"></mat-icon>
+
+                            <mat-menu #filterDocumentMenu="matMenu" [hasBackdrop]="false">
+                                <div style="width: 250px;text-align: center;">
+                                    @if (filterDocumentType<=3) { <mat-form-field appearance="outline"
+                                        (click)="$event.stopPropagation();">
+                                        <mat-label>Filtro para cedula</mat-label>
+                                        <input matInput placeholder="Cedula" [(ngModel)]="filterDocument"
+                                            (ngModelChange)="refreshPPaginated()" (click)="$event.stopPropagation();">
+                                        </mat-form-field>
+                                        }
+                                        <mat-form-field (click)="$event.stopPropagation();">
+                                            <mat-label>Tipo de filtro</mat-label>
+                                            <mat-select [(ngModel)]="filterDocumentType"
+                                                (ngModelChange)="refreshPPaginated()">
+
+
+                                                <mat-option [value]="0"
+                                                    (click)="$event.stopPropagation();">contiene</mat-option>
+                                                <mat-option [value]="1" (click)="$event.stopPropagation();">No
+                                                    contiene</mat-option>
+                                                <mat-option [value]="2" (click)="$event.stopPropagation();">Es
+                                                    Igual</mat-option>
+                                                <mat-option [value]="3" (click)="$event.stopPropagation();">Es
+                                                    null</mat-option>
+                                                <mat-option [value]="4" (click)="$event.stopPropagation();">No es
+                                                    null</mat-option>
+
+                                            </mat-select>
+                                        </mat-form-field>
+                                </div>
+                            </mat-menu>
+                        </div>
+                        <div>
+                            {{filterDocument}}
+                            <mat-icon *ngIf="filterDocument.length>0" aria-hidden="false"
+                                style="color: red; cursor: pointer;" aria-label="Example home icon" fontIcon="cancel"
+                                (click)="filterDocument='';refreshPPaginated()"></mat-icon>
+                        </div>
+
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.document}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>
+
+                    <div class="column-container">
+                        <!-- Contenido de la columna 1 -->
+                        <div>
+                            <mat-icon aria-hidden="false" style="color: red; cursor: pointer;"
+                                aria-label="Example home icon" fontIcon="delete"
+                                (click)="deleteColumn('name')"></mat-icon>
+                            <div (click)="setSortColumn('name')" style="cursor: pointer;">
+                                Nombre
+                                @if (
+                                this.paginated.columnSort=="name" ||  this.paginated.columnSort=="name-1" 
+                                ) {
+
+                                @if (this.paginated.columnSort.includes('-1')) {
+                                <mat-icon fontIcon="arrow_downward"></mat-icon>
+                                }@else {
+
+                                <mat-icon fontIcon="arrow_upward"></mat-icon>
+
+                                }
+
+                                }
+                            </div>
+
+                            <mat-icon aria-hidden="false" style="color: blue; cursor: pointer;"
+                                [matMenuTriggerFor]="filterNameMenu" aria-label="Example home icon"
+                                fontIcon="filter_list"></mat-icon>
+
+                            <mat-menu #filterNameMenu="matMenu" [hasBackdrop]="false">
+                                <div style="width: 250px;text-align: center;">
+                                    @if (filterNameType<=3) { <mat-form-field appearance="outline"
+                                        (click)="$event.stopPropagation();">
+                                        <mat-label>Filtro para Nombre</mat-label>
+                                        <input matInput placeholder="Nombre" [(ngModel)]="filterName"
+                                            (ngModelChange)="refreshPPaginated()" (click)="$event.stopPropagation();">
+                                        </mat-form-field>
+                                        }
+                                        <mat-form-field (click)="$event.stopPropagation();">
+                                            <mat-label>Tipo de filtro</mat-label>
+                                            <mat-select [(ngModel)]="filterNameType"
+                                                (ngModelChange)="refreshPPaginated()">
+
+
+                                                <mat-option [value]="0"
+                                                    (click)="$event.stopPropagation();">contiene</mat-option>
+                                                <mat-option [value]="1" (click)="$event.stopPropagation();">No
+                                                    contiene</mat-option>
+                                                <mat-option [value]="2" (click)="$event.stopPropagation();">Es
+                                                    Igual</mat-option>
+                                                <mat-option [value]="3" (click)="$event.stopPropagation();">Es
+                                                    null</mat-option>
+                                                <mat-option [value]="4" (click)="$event.stopPropagation();">No es
+                                                    null</mat-option>
+
+                                            </mat-select>
+                                        </mat-form-field>
+                                </div>
+                            </mat-menu>
+                        </div>
+                        <div>
+                            {{filterName}}
+                            <mat-icon *ngIf="filterName.length>0" aria-hidden="false"
+                                style="color: red; cursor: pointer;" aria-label="Example home icon" fontIcon="cancel"
+                                (click)="filterName='';refreshPPaginated()"></mat-icon>
+                        </div>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+
+
+            </ng-container>
+
+
+
+            <ng-container matColumnDef="lastname">
+                <th mat-header-cell *matHeaderCellDef>
+                    <div class="column-container">
+                        <!-- Contenido de la columna 1 -->
+                        <div>
+                            <mat-icon aria-hidden="false" style="color: red; cursor: pointer;"
+                                aria-label="Example home icon" fontIcon="delete"
+                                (click)="deleteColumn('lastname')"></mat-icon>
+                            <div (click)="setSortColumn('lastname')" style="cursor: pointer;">
+                                Apellido
+
+                                @if (
+                                this.paginated.columnSort.includes("lastname")
+                                ) {
+
+                                @if (this.paginated.columnSort.includes('-1')) {
+                                <mat-icon fontIcon="arrow_downward"></mat-icon>
+                                }@else {
+
+                                <mat-icon fontIcon="arrow_upward"></mat-icon>
+
+                                }
+
+                                }
+                            </div>
+                            <mat-icon aria-hidden="false" style="color: blue; cursor: pointer;"
+                                [matMenuTriggerFor]="filterLastNameMenu" aria-label="Example home icon"
+                                fontIcon="filter_list"></mat-icon>
+
+                            <mat-menu #filterLastNameMenu="matMenu" [hasBackdrop]="false">
+                                <div style="width: 250px;text-align: center;">
+                                    @if (filterLastNameType<=3) { <mat-form-field appearance="outline"
+                                        (click)="$event.stopPropagation();">
+                                        <mat-label>Filtro para Apellido</mat-label>
+                                        <input matInput placeholder="Apellido" [(ngModel)]="filterLastName"
+                                            (ngModelChange)="refreshPPaginated()" (click)="$event.stopPropagation();">
+                                        </mat-form-field>
+                                        }
+                                        <mat-form-field (click)="$event.stopPropagation();">
+                                            <mat-label>Tipo de filtro</mat-label>
+                                            <mat-select [(ngModel)]="filterLastNameType"
+                                                (ngModelChange)="refreshPPaginated()">
+
+
+                                                <mat-option [value]="0"
+                                                    (click)="$event.stopPropagation();">contiene</mat-option>
+                                                <mat-option [value]="1" (click)="$event.stopPropagation();">No
+                                                    contiene</mat-option>
+                                                <mat-option [value]="2" (click)="$event.stopPropagation();">Es
+                                                    Igual</mat-option>
+                                                <mat-option [value]="3" (click)="$event.stopPropagation();">Es
+                                                    null</mat-option>
+                                                <mat-option [value]="4" (click)="$event.stopPropagation();">No es
+                                                    null</mat-option>
+
+                                            </mat-select>
+                                        </mat-form-field>
+                                </div>
+                            </mat-menu>
+
+                        </div>
+                        <div>
+                            {{filterLastName}}
+                            <mat-icon *ngIf="filterLastName.length>0" aria-hidden="false"
+                                style="color: red; cursor: pointer;" aria-label="Example home icon" fontIcon="cancel"
+                                (click)="filterLastName='';refreshPPaginated()"></mat-icon>
+                        </div>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+            </ng-container>
+
+
+
+
+            <ng-container matColumnDef="options">
+                <th mat-header-cell *matHeaderCellDef>
+
+                    <mat-icon aria-hidden="false" [matMenuTriggerFor]="menu" style="cursor: pointer;"
+                        aria-label="Example home icon" fontIcon="more_vert">
+                    </mat-icon>
+                    <mat-menu #menu="matMenu" [hasBackdrop]="false">
+                        <mat-form-field (click)="$event.stopPropagation();">
+                            <mat-label>Columnas</mat-label>
+                            <mat-select [formControl]="toppings" multiple>
+                                <mat-select-trigger>
+                                    {{toppings.value?.[0] || ''}}
+                                    @if ((toppings.value?.length || 0) > 1) {
+                                    <span class="example-additional-selection">
+                                        (+{{(toppings.value?.length || 0) - 1}} {{toppings.value?.length === 2 ? 'other'
+                                        :
+                                        'others'}})
+                                    </span>
+                                    }
+                                </mat-select-trigger>
+                                @for (topping of basedisplayedColumns; track topping) {
+                                <mat-option [value]="topping.value"
+                                    (click)="$event.stopPropagation();setColumns()">{{topping.label}}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-menu>
+                </th>
+                <td mat-cell *matCellDef="let element"> <mat-icon aria-hidden="false"
+                        style="color: orange; cursor: pointer;" aria-label="Example home icon" fontIcon="edit"
+                        (click)="editPerson(element)"></mat-icon>
+
+                    <mat-icon aria-hidden="false" style="color: red; cursor: pointer;" aria-label="Example home icon"
+                        fontIcon="delete" (click)="deleteByDocument(element.document)"></mat-icon>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="datebirth">
+                <th mat-header-cell *matHeaderCellDef>
+                    <div class="column-container">
+                        <!-- Contenido de la columna 1 -->
+                        <div>
+                            <mat-icon aria-hidden="false" style="color: red; cursor: pointer;"
+                                aria-label="Example home icon" fontIcon="delete"
+                                (click)="deleteColumn('datebirth')"></mat-icon>
+                            <div (click)="setSortColumn('datebirth')" style="cursor: pointer;">Fecha
+                                de nacimiento
+
+                                @if (
+                                this.paginated.columnSort.includes("datebirth")
+                                ) {
+
+                                @if (this.paginated.columnSort.includes('-1')) {
+                                <mat-icon fontIcon="arrow_downward"></mat-icon>
+                                }@else {
+
+                                <mat-icon fontIcon="arrow_upward"></mat-icon>
+
+                                }
+
+                                }
+                            </div>
+                            <mat-icon aria-hidden="false" style="color: blue; cursor: pointer;"
+                                [matMenuTriggerFor]="filterBithdayMenu" aria-label="Example home icon"
+                                fontIcon="filter_list"></mat-icon>
+
+                            <mat-menu #filterBithdayMenu="matMenu" [hasBackdrop]="false">
+                                <div style="width: 250px;text-align: center;">
+                                    @if (filterBirthdayType>=5 && filterBirthdayType<=8) { @if(filterBirthdayType==5 ||
+                                        filterBirthdayType==6){ <mat-form-field (click)="$event.stopPropagation();">
+                                        <mat-label (click)="$event.stopPropagation();">Rango de fecha</mat-label>
+                                        <mat-date-range-input [rangePicker]="picker" [formGroup]="range"
+                                            (click)="$event.stopPropagation();">
+                                            <input matStartDate formControlName="start" placeholder="Start date"
+                                                (change)="setfilterBirthday()" (click)="$event.stopPropagation(); ">
+                                            <input matEndDate formControlName="end" placeholder="End date"
+                                                (click)="$event.stopPropagation();" (change)="setfilterBirthday()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #picker
+                                            (closed)="setfilterBirthday()"></mat-date-range-picker>
+                                        @if (range.controls.start.hasError('matStartDateInvalid')) {
+                                        <mat-error>Invalid start date</mat-error>
+                                        }
+                                        @if (range.controls.end.hasError('matEndDateInvalid')) {
+                                        <mat-error>Invalid end date</mat-error>
+                                        }
+                                        </mat-form-field>
+                                        }
+                                        @if(filterBirthdayType==7 || filterBirthdayType==8){
+                                        <mat-form-field (click)="$event.stopPropagation();">
+                                            <mat-label (click)="$event.stopPropagation();"> Fecha:</mat-label>
+                                            <input matInput [matDatepicker]="datepicker" [(ngModel)]="filterBirthday"
+                                                (ngModelChange)="chageFilterBirthday();refreshPPaginated()">
+
+                                            <mat-datepicker-toggle matIconSuffix
+                                                [for]="datepicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #datepicker>
+                                                <mat-datepicker-actions>
+                                                    <button mat-button matDatepickerCancel>Cancel</button>
+                                                    <button mat-raised-button color="primary"
+                                                        matDatepickerApply>Apply</button>
+                                                </mat-datepicker-actions>
+                                            </mat-datepicker>
+                                        </mat-form-field>
+                                        }
+                                        }
+                                        <mat-form-field (click)="$event.stopPropagation();">
+                                            <mat-label>Tipo de filtro</mat-label>
+                                            <mat-select [(ngModel)]="filterBirthdayType" (ngModelChange)="refreshPPaginated()" >
+
+
+                                                <mat-option [value]="5"
+                                                    (click)="$event.stopPropagation();">Entre</mat-option>
+                                                <mat-option [value]="6"
+                                                    (click)="$event.stopPropagation();">Fuera</mat-option>
+
+                                                <mat-option [value]="3" (click)="$event.stopPropagation();">Es
+                                                    null</mat-option>
+                                                <mat-option [value]="4" (click)="$event.stopPropagation();">No es
+                                                    null</mat-option>
+
+                                            </mat-select>
+                                        </mat-form-field>
+                                </div>
+                            </mat-menu>
+                        </div>
+
+                        <!-- Contenido de la columna 2 -->
+                        <div>
+                            {{filterBirthday}}
+                            <mat-icon *ngIf="filterBirthday" aria-hidden="false" style="color: red; cursor: pointer;"
+                                aria-label="Example home icon" fontIcon="cancel"
+                                (click)="filterBirthday='';refreshPPaginated()"></mat-icon>
+                        </div>
+
+                        <!-- Puedes agregar más columnas según sea necesario -->
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.datebirth}} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [length]="totalPages" [pageIndex]="this.paginated.page" [pageSize]="this.paginated.limit"
+            [pageSizeOptions]="[5,10,15,20]" (page)="handlePageEvent($event)" [disabled]="false"></mat-paginator>
+    </div>
+
+</div>
